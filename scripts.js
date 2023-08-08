@@ -27,109 +27,133 @@ const carsData = [
     { make: "Honda", model: "Accord", year: 2018, mileage: 40000, price: 17000, image: "placeholder.jpg" },
 ];
 
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("DOMContentLoaded triggered for integrated functionality");
-        populateMakeDropdown();
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("DOMContentLoaded triggered for integrated functionality");
+    populateMakeDropdown();
+    populateYearDropdown();
+    document.getElementById('make').addEventListener('change', function() {
+        populateModelDropdown();
         populateYearDropdown();
-        document.getElementById('make').addEventListener('change', populateModelDropdown);
-        document.getElementById('search-btn').addEventListener('click', filterCars);
+    });
+    document.getElementById('model').addEventListener('change', populateYearDropdown);
+    document.getElementById('search-btn').addEventListener('click', filterCars);
+});
+
+function populateMakeDropdown() {
+    const makeDropdown = document.getElementById('make');
+    const makes = [...new Set(carsData.map(car => car.make))];
+
+    makes.forEach(make => {
+        const option = document.createElement('option');
+        option.value = make;
+        option.textContent = make;
+        makeDropdown.appendChild(option);
+    });
+}
+
+function populateModelDropdown() {
+    const make = document.getElementById('make').value;
+    const modelDropdown = document.getElementById('model');
+
+    // Clear existing options
+    while (modelDropdown.firstChild) {
+        modelDropdown.removeChild(modelDropdown.firstChild);
+    }
+
+    const allOption = document.createElement('option');
+    allOption.value = "";
+    allOption.textContent = "All";
+    modelDropdown.appendChild(allOption);
+
+    if (make) {
+        const models = [...new Set(carsData.filter(car => car.make === make).map(car => car.model))];
+
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model;
+            option.textContent = model;
+            modelDropdown.appendChild(option);
+        });
+    }
+}
+
+function populateYearDropdown() {
+    const make = document.getElementById('make').value;
+    const model = document.getElementById('model').value;
+    const yearDropdown = document.getElementById('year');
+
+    // Clear existing options
+    while (yearDropdown.firstChild) {
+        yearDropdown.removeChild(yearDropdown.firstChild);
+    }
+
+    const allOption = document.createElement('option');
+    allOption.value = "";
+    allOption.textContent = "All";
+    yearDropdown.appendChild(allOption);
+
+    let filteredCars = carsData;
+
+    if (make) {
+        filteredCars = filteredCars.filter(car => car.make === make);
+    }
+
+    if (model) {
+        filteredCars = filteredCars.filter(car => car.model === model);
+    }
+
+    const years = [...new Set(filteredCars.map(car => car.year))].sort((a, b) => b - a); // Newest first
+
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearDropdown.appendChild(option);
+    });
+}
+
+function filterCars() {
+    const make = document.getElementById('make').value;
+    const model = document.getElementById('model').value;
+    const year = document.getElementById('year').value;
+    const minPrice = document.getElementById('min-price').value;
+    const maxPrice = document.getElementById('max-price').value;
+    const minMileage = document.getElementById('min-mileage').value;
+    const maxMileage = document.getElementById('max-mileage').value;
+
+    const filteredCars = carsData.filter(car => {
+        return (!make || car.make === make) &&
+               (!model || car.model === model) &&
+               (!year || car.year == year) &&
+               (!minPrice || car.price >= minPrice) &&
+               (!maxPrice || car.price <= maxPrice) &&
+               (!minMileage || car.mileage >= minMileage) &&
+               (!maxMileage || car.mileage <= maxMileage);
     });
 
-    function populateMakeDropdown() {
-        const makeDropdown = document.getElementById('make');
-        const makes = [...new Set(carsData.map(car => car.make))];
+    displayCars(filteredCars);
+}
 
-        makes.forEach(make => {
-            const option = document.createElement('option');
-            option.value = make;
-            option.textContent = make;
-            makeDropdown.appendChild(option);
-        });
-    }
+function displayCars(cars) {
+    const resultsSection = document.querySelector('.results-section');
+    resultsSection.innerHTML = ''; // Clear existing listings
 
-    function populateModelDropdown() {
-        const make = document.getElementById('make').value;
-        const modelDropdown = document.getElementById('model');
+    cars.forEach(car => {
+        const listing = document.createElement('div');
+        listing.className = 'listing';
 
-        // Clear existing options
-        while (modelDropdown.firstChild) {
-            modelDropdown.removeChild(modelDropdown.firstChild);
-        }
+        const details = document.createElement('div');
+        details.className = 'listing-details';
 
-        const allOption = document.createElement('option');
-        allOption.value = "";
-        allOption.textContent = "All";
-        modelDropdown.appendChild(allOption);
+        const makeModel = document.createElement('p');
+        makeModel.textContent = `${car.make} ${car.model}`;
 
-        if (make) {
-            const models = [...new Set(carsData.filter(car => car.make === make).map(car => car.model))];
+        const yearMileagePrice = document.createElement('p');
+        yearMileagePrice.textContent = `${car.year} | ${car.mileage} miles | $${car.price}`;
 
-            models.forEach(model => {
-                const option = document.createElement('option');
-                option.value = model;
-                option.textContent = model;
-                modelDropdown.appendChild(option);
-            });
-        }
-    }
-
-    function populateYearDropdown() {
-        const yearDropdown = document.getElementById('year');
-        const years = [...new Set(carsData.map(car => car.year))].sort((a, b) => b - a); // Newest first
-
-        years.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearDropdown.appendChild(option);
-        });
-    }
-
-    function filterCars() {
-        const make = document.getElementById('make').value;
-        const model = document.getElementById('model').value;
-        const year = document.getElementById('year').value;
-        const minPrice = document.getElementById('min-price').value;
-        const maxPrice = document.getElementById('max-price').value;
-        const minMileage = document.getElementById('min-mileage').value;
-        const maxMileage = document.getElementById('max-mileage').value;
-
-        const filteredCars = carsData.filter(car => {
-            return (!make || car.make === make) &&
-                   (!model || car.model === model) &&
-                   (!year || car.year == year) &&
-                   (!minPrice || car.price >= minPrice) &&
-                   (!maxPrice || car.price <= maxPrice) &&
-                   (!minMileage || car.mileage >= minMileage) &&
-                   (!maxMileage || car.mileage <= maxMileage);
-        });
-
-        console.log(filteredCars);
-        displayCars(filteredCars);
-    }
-
-    function displayCars(cars) {
-        const resultsSection = document.querySelector('.results-section');
-        resultsSection.innerHTML = ''; // Clear existing listings
-
-        cars.forEach(car => {
-            const listing = document.createElement('div');
-            listing.className = 'listing';
-
-            const details = document.createElement('div');
-            details.className = 'listing-details';
-
-            const makeModel = document.createElement('p');
-            makeModel.textContent = `${car.make} ${car.model}`;
-
-            const yearMileagePrice = document.createElement('p');
-            yearMileagePrice.textContent = `${car.year} | ${car.mileage} miles | $${car.price}`;
-
-            details.appendChild(makeModel);
-            details.appendChild(yearMileagePrice);
-
-            listing.appendChild(details);
-
-            resultsSection.appendChild(listing);
-        });
-    }
+        details.appendChild(makeModel);
+        details.appendChild(yearMileagePrice);
+        listing.appendChild(details);
+        resultsSection.appendChild(listing);
+    });
+}
