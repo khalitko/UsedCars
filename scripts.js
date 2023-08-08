@@ -21,11 +21,12 @@ const carsData = [
     { make: "Tesla", model: "Model S", year: 2019, mileage: 25000, price: 60000, image: "placeholder.jpg" },
     { make: "Hyundai", model: "Elantra", year: 2019, mileage: 30000, price: 18000, image: "placeholder.jpg" },
     { make: "Hyundai", model: "Santa Fe", year: 2020, mileage: 20000, price: 24000, image: "placeholder.jpg" },
-    { make: "Toyota", model: "Camry", year: 2019, mileage: 30000, price: 20000, image: "placeholder.jpg" },
-    { make: "Toyota", model: "Corolla", year: 2020, mileage: 25000, price: 18000, image: "placeholder.jpg" },
-    { make: "Honda", model: "Civic", year: 2020, mileage: 20000, price: 19000, image: "placeholder.jpg" },
-    { make: "Honda", model: "Accord", year: 2018, mileage: 40000, price: 17000, image: "placeholder.jpg" },
+    { make: "Subaru", model: "Outback", year: 2019, mileage: 22000, price: 29000, image: "placeholder.jpg" },
+    { make: "Jeep", model: "Wrangler", year: 2020, mileage: 15000, price: 33000, image: "placeholder.jpg" },
+    { make: "Mazda", model: "CX-5", year: 2020, mileage: 10000, price: 25000, image: "placeholder.jpg" },
+    { make: "Kia", model: "Optima", year: 2018, mileage: 40000, price: 17000, image: "placeholder.jpg" }
 ];
+
 
 document.addEventListener("DOMContentLoaded", function() {
     console.log("DOMContentLoaded triggered for integrated functionality");
