@@ -149,11 +149,19 @@ function displayCars(cars) {
         makeModel.textContent = `${car.make} ${car.model}`;
 
         const yearMileagePrice = document.createElement('p');
-        yearMileagePrice.textContent = `${car.year} | ${car.mileage} miles | $${car.price}`;
+        yearMileagePrice.textContent = `${car.year} | ${formatMileage(car.mileage)} miles | ${formatPrice(car.price)}`;
 
         details.appendChild(makeModel);
         details.appendChild(yearMileagePrice);
         listing.appendChild(details);
         resultsSection.appendChild(listing);
     });
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
+}
+
+function formatMileage(mileage) {
+    return new Intl.NumberFormat('en-US').format(mileage);
 }
